@@ -1,4 +1,14 @@
-document.addEventListener('DOMContentLoaded',async()=>{const sb=window.ocSupabase;const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.addEventListener('DOMContentLoaded',async()=>{
+// Homepage hero background slideshow
+const heroSlides=[...document.querySelectorAll('.hero-slide')];
+const heroDots=[...document.querySelectorAll('.hero-dot')];
+if(heroSlides.length){
+  let heroIndex=0;
+  const showHero=(i)=>{heroIndex=i%heroSlides.length;heroSlides.forEach((x,n)=>x.classList.toggle('is-active',n===heroIndex));heroDots.forEach((x,n)=>x.classList.toggle('active',n===heroIndex));};
+  heroDots.forEach((dot,i)=>dot.onclick=()=>showHero(i));
+  setInterval(()=>showHero(heroIndex+1),6000);
+}
+const sb=window.ocSupabase;const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function cats(){const {data}=await sb.from('categories').select('*').order('name');return data||[]}
 async function products(){const {data,error}=await sb.from('products').select('*,categories(name),brands(name)').eq('active',true).order('created_at',{ascending:false});return error?[]:(data||[])}
 const cs=await cats();const ps=await products();
