@@ -24,3 +24,6 @@ Prices are intentionally omitted. Customers see Request a Quote.
 
 ## Supabase
 The site expects these tables created in your Supabase project: `categories`, `brands`, `products`, `quote_requests`, and `admin_users`, plus the `product-images` storage bucket and the RLS policies already configured in the setup steps.
+
+
+Hero slideshow: six supplied yacht images are in assets/images and rotate automatically every 6 seconds.

@@ -1,13 +1,8 @@
 document.addEventListener('DOMContentLoaded',async()=>{
-// Homepage hero background slideshow
-const heroSlides=[...document.querySelectorAll('.hero-slide')];
-const heroDots=[...document.querySelectorAll('.hero-dot')];
-if(heroSlides.length){
-  let heroIndex=0;
-  const showHero=(i)=>{heroIndex=i%heroSlides.length;heroSlides.forEach((x,n)=>x.classList.toggle('is-active',n===heroIndex));heroDots.forEach((x,n)=>x.classList.toggle('active',n===heroIndex));};
-  heroDots.forEach((dot,i)=>dot.onclick=()=>showHero(i));
-  setInterval(()=>showHero(heroIndex+1),6000);
-}
+const slides=[...document.querySelectorAll('.hero-slide')], dots=[...document.querySelectorAll('.hero-dot')]; let current=0, timer;
+function showSlide(i){if(!slides.length)return; current=(i+slides.length)%slides.length; slides.forEach((s,n)=>s.classList.toggle('active',n===current)); dots.forEach((d,n)=>d.classList.toggle('active',n===current));}
+function restart(){clearInterval(timer); timer=setInterval(()=>showSlide(current+1),6000);}
+if(slides.length){document.querySelector('.hero-prev')?.addEventListener('click',()=>{showSlide(current-1);restart()});document.querySelector('.hero-next')?.addEventListener('click',()=>{showSlide(current+1);restart()});dots.forEach(d=>d.addEventListener('click',()=>{showSlide(Number(d.dataset.slide));restart()}));restart();}
 const sb=window.ocSupabase;const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function cats(){const {data}=await sb.from('categories').select('*').order('name');return data||[]}
 async function products(){const {data,error}=await sb.from('products').select('*,categories(name),brands(name)').eq('active',true).order('created_at',{ascending:false});return error?[]:(data||[])}
